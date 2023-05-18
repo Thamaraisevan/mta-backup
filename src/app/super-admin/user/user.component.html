@@ -1,0 +1,741 @@
+<div class="container">
+    <div class="main-content light-font">
+
+        <div class="container card  d-flex justify-content-center">
+            <!-- nav options -->
+            <div class="row">
+                <div class="col-md-8">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item "> <a class="nav-link active  semiBold-font" id="general-tab" data-toggle="pill" href="#general-home"
+                        role="tab" aria-controls="pills-home" aria-selected="true">Clients</a> </li>
+                <li class="nav-item"> <a class="nav-link  semiBold-font" id="gym-owner-tab" data-toggle="pill" href="#gym-owner"
+                        role="tab" aria-controls="pills-home" aria-selected="true">Staffs</a> </li>
+                <li class="nav-item"> <a class="nav-link  semiBold-font" id="member-tab" data-toggle="pill" href="#member"
+                        role="tab" aria-controls="pills-home" aria-selected="true">Contractors</a> </li>
+                        <li class="nav-item"> <a class="nav-link  semiBold-font" id="consult-tab" data-toggle="pill" href="#consult"
+                            role="tab" aria-controls="pills-home" aria-selected="true">Consultants</a> </li>
+                <li class="nav-item"> <a class="nav-link  semiBold-font" id="trainer-tab" data-toggle="pill" href="#trainer"
+                        role="tab" aria-controls="pills-home" aria-selected="true">Vendors</a> </li>
+
+                <li class="nav-item"> <a class="nav-link  semiBold-font" id="trainer-tab" data-toggle="pill" href="#publicuser"
+                    role="tab" aria-controls="pills-home" aria-selected="true">Public Users</a> </li>
+                    </ul> <!-- content -->
+                </div>
+                    <div class="col-md-4">
+                        <button (click)="adduser();" class="btn btn-bg btn-primary app-bg  semiBold-font add-user" data-toggle="modal" data-target="#userModal"
+                        (click)="addModal()">Add New User</button>              
+                     </div>
+                
+        </div>
+
+        
+            <div class="tab-content" id="pills-tabContent p-3">
+                <div class="col-md-4">
+                    <input type="text" style="background: white !important;" class="form-control br-2 semiBold-font searchBox" [(ngModel)]="searchText" (keypress)="omit_special_char($event)" (change)="checkFilter()" pattern="^(?=.*[a-zA-Z])[a-zA-Z ]+$" placeholder="Search" aria-label="Search">
+                </div>
+                <!-- 1st card -->
+                <div class="tab-pane fade show active" id="general-home" role="tabpanel" aria-labelledby="general-tab">
+                    <div class="tab-container">
+                        <div class="main">
+                           
+                            <p *ngIf="usersListCus == ''" class="text-center light-font">No Clients Available</p>
+                            <div class="card-columns full-width" style="column-count: 1;border-radius: 10px;" >
+                                <div class="gymDsgn">
+                                    <div class="row"  *ngIf="(usersListCus | filter:searchText | filter:searchdrop) as usersListCus">
+                                        <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of usersListCus ">
+                                            
+                                            <div class="dashCard">
+                                                <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <mat-menu #menu="matMenu">
+                                                  <button mat-menu-item (click)="editUser(item)" data-toggle="modal" data-target="#userModal">Edit</button>
+                                                  <button mat-menu-item (click)="deleteUser(item)">Delete</button>
+                                                  <!-- <button mat-menu-item data-toggle="modal" (click)="forgotPassword(item)" data-target="#forgotPassModal">Reset Password</button> -->
+                                                </mat-menu>
+                                                <div class="row"  >
+                                                    <div class="col-md-12">
+                                                            <!-- <div class="imgBox"> -->
+                                                    <div class="profileImage">
+                                                        <img class="card-img-top rounded-circle" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)" for="img" width="60px"  src="{{http.imageURL}}{{item.user_img}}"
+                                                            onerror="this.src='assets/image/user.svg'" alt="Profile image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row"  (click)="viewUser(item)">
+                                                    <div class="col-md-12">
+                                                        <div class="textDsgn">
+                                                        <span class="semiBold-font">{{ item.name}}</span>
+                                                        <p class="light-font">+91 {{item.mobile_no}}</p> 
+                                                        <!-- <p class="text-fnt80">{{item.email_id}}</p>
+                                                        <p class="text-fnt80">{{item.contact_no}}</p> --> 
+                                                        <!-- <p class="text-fnt80"><i class="fa fa-map-marker"></i>  {{item.address}},{{item.city}},{{item.state}}</p> -->
+                                                        </div>
+                        
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--| paginate: { itemsPerPage: http.paginationCount, currentPage: p , totalItems: http.CUSTpages}<div *ngIf="http.CUSTpages > 8">
+                                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                    </div>-->
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> <!-- 2nd card -->
+
+                <!-- 1st card -->
+                <div class="tab-pane fade" id="gym-owner" role="tabpanel" aria-labelledby="gym-owner-tab">
+                    <div class="tab-container">
+                        <div class="main">
+                            <p *ngIf="usersListStaf == ''" class="text-center">No Staffs Available</p>
+                            <div class="card-columns full-width" style="column-count: 1;border-radius: 10px;" >
+                                <div class="gymDsgn">
+                                    <div class="row" *ngIf="(usersListStaf | filter:searchText | filter:searchdrop) as usersListStaf">
+                                        <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of usersListStaf ">
+                                            <div class="dashCard" >
+                                                <!-- <div class="iconTop">
+                                                    <i class="fa fa-pencil-square-o dashIcon" style="margin-right: 0.7em;" aria-hidden="true"
+                                                        data-toggle="modal" data-target="#gymModal" (click)="editGym(item)"></i>
+                                                    <i class="fa fa-trash-o dashIcon" aria-hidden="true" (click)="deleteGym(item.user_id)"></i>
+                                                </div>    
+                                                <br> -->
+                                                <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <mat-menu #menu="matMenu">
+                                                    <button mat-menu-item (click)="editUser(item)" data-toggle="modal" data-target="#userModal">Edit</button>
+                                                    <button mat-menu-item (click)="deleteUser(item)">Delete</button>
+                                                    <!-- <button mat-menu-item data-toggle="modal" (click)="forgotPassword(item)" data-target="#forgotPassModal">Reset Password</button> -->
+                                                  </mat-menu>
+                                                <div class="row" >
+                                                    <div class="col-md-12">
+                                                            <!-- <div class="imgBox"> -->
+                                                    <div class="profileImage">
+                                                        <img class="card-img-top rounded-circle" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)" for="img" width="60px" src="{{http.imageURL}}{{item.user_img}}"
+                                                            onerror="this.src='assets/image/user.svg'" alt="Profile image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row" (click)="viewUser(item)">
+                                                    <div class="col-md-12">
+                                                        <div class="textDsgn">
+                                                            <span class="semiBold-font">{{ item.name}}</span>
+                                                            <p class="light-font">{{item.prof}}</p>
+                                                            <p class="light-font">+91 {{item.mobile_no}}</p> 
+                                                        <!-- <p class="text-fnt80">{{item.last_name}}</p>
+                                                        <p class="text-fnt80">{{item.email_id}}</p>
+                                                        <p class="text-fnt80">{{item.contact_no}}</p> -->
+                                                        <!-- <p class="text-fnt80"><i class="fa fa-map-marker"></i>  {{item.address}},{{item.city}},{{item.state}}</p> -->
+                                                        </div>
+                        
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--| paginate: { itemsPerPage: http.paginationCount, currentPage: p, totalItems: http.STAFFpages }<div *ngIf="http.STAFFpages > 8">
+                                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- 2nd card -->
+
+                <!-- 1st card -->
+                <div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab">
+                    <div class="tab-container">
+                        <div class="main">
+
+                            <p *ngIf="usersListCont == ''" class="text-center">No Contractors Available</p>
+                            <div class="card-columns full-width" style="column-count: 1;border-radius: 10px;" >
+                                <div class="gymDsgn">
+                                    <div class="row" *ngIf="(usersListCont | filter:searchText | filter:searchdrop) as usersListCont">
+                                        <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of usersListCont ">
+                                            <div class="dashCard" >
+                                                <!-- <div class="iconTop">
+                                                    <i class="fa fa-pencil-square-o dashIcon" style="margin-right: 0.7em;" aria-hidden="true"
+                                                        data-toggle="modal" data-target="#gymModal" (click)="editGym(item)"></i>
+                                                    <i class="fa fa-trash-o dashIcon" aria-hidden="true" (click)="deleteGym(item.user_id)"></i>
+                                                </div>    
+                                                <br> -->
+                                                <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <mat-menu #menu="matMenu">
+                                                    <button mat-menu-item (click)="editUser(item)" data-toggle="modal" data-target="#userModal">Edit</button>
+                                                    <button mat-menu-item (click)="deleteUser(item)">Delete</button>
+                                                    <!-- <button mat-menu-item data-toggle="modal" (click)="forgotPassword(item)" data-target="#forgotPassModal">Reset Password</button> -->
+                                                  </mat-menu>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                            <!-- <div class="imgBox"> -->
+                                                    <div class="profileImage">
+                                                        <img class="card-img-top rounded-circle" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)" for="img" width="60px" src="{{http.imageURL}}{{item.user_img}}"
+                                                            onerror="this.src='assets/image/user.svg'" alt="Profile image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row" (click)="viewUser(item)">
+                                                    <div class="col-md-12">
+                                                        <div class="textDsgn">
+                                                            <span class="semiBold-font">{{ item.name}}</span>
+                                                            <p class="light-font">{{ item.prof }}</p>
+                                                            <p class="light-font">+91 {{item.mobile_no}}</p> 
+                                                        <!-- <p class="text-fnt80">{{item.last_name}}</p>
+                                                        <p class="text-fnt80">{{item.email_id}}</p>
+                                                        <p class="text-fnt80">{{item.contact_no}}</p> -->
+                                                        <!-- <p class="text-fnt80"><i class="fa fa-map-marker"></i>  {{item.address}},{{item.city}},{{item.state}}</p> -->
+                                                        </div>
+                        
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                    <!--| paginate: { itemsPerPage: http.paginationCount, currentPage: p, totalItems: http.CONTpages }<div *ngIf="http.CONTpages > 8">
+                                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                    </div>-->
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                </div> <!-- 2nd card -->
+
+                <div class="tab-pane fade" id="consult" role="tabpanel" aria-labelledby="consult-tab">
+                    <div class="tab-container">
+                        <div class="main">
+
+                            <p *ngIf="usersListC == ''" class="text-center">No Consultants Available</p>
+                            <div class="card-columns full-width" style="column-count: 1;border-radius: 10px;" >
+                                <div class="gymDsgn">
+                                    <div class="row" *ngIf="(usersListC | filter:searchText | filter:searchdrop) as usersListC">
+                                        <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of usersListC ">
+                                            <div class="dashCard" >
+                                                <!-- <div class="iconTop">
+                                                    <i class="fa fa-pencil-square-o dashIcon" style="margin-right: 0.7em;" aria-hidden="true"
+                                                        data-toggle="modal" data-target="#gymModal" (click)="editGym(item)"></i>
+                                                    <i class="fa fa-trash-o dashIcon" aria-hidden="true" (click)="deleteGym(item.user_id)"></i>
+                                                </div>    
+                                                <br> -->
+                                                <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <mat-menu #menu="matMenu">
+                                                    <button mat-menu-item (click)="editUser(item)" data-toggle="modal" data-target="#userModal">Edit</button>
+                                                    <button mat-menu-item (click)="deleteUser(item)">Delete</button>
+                                                    <!-- <button mat-menu-item data-toggle="modal" (click)="forgotPassword(item)" data-target="#forgotPassModal">Reset Password</button> -->
+                                                  </mat-menu>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                            <!-- <div class="imgBox"> -->
+                                                    <div class="profileImage">
+                                                        <img class="card-img-top rounded-circle" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)" for="img" width="60px" src="{{http.imageURL}}{{item.user_img}}"
+                                                            onerror="this.src='assets/image/user.svg'" alt="Profile image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row" (click)="viewUser(item)">
+                                                    <div class="col-md-12">
+                                                        <div class="textDsgn">
+                                                            <span class="semiBold-font">{{ item.name}}</span>
+                                                            <p class="light-font">{{ item.prof }}</p>
+                                                            <p class="light-font">+91 {{item.mobile_no}}</p> 
+                                                        <!-- <p class="text-fnt80">{{item.last_name}}</p>
+                                                        <p class="text-fnt80">{{item.email_id}}</p>
+                                                        <p class="text-fnt80">{{item.contact_no}}</p> -->
+                                                        <!-- <p class="text-fnt80"><i class="fa fa-map-marker"></i>  {{item.address}},{{item.city}},{{item.state}}</p> -->
+                                                        </div>
+                        
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--| paginate: { itemsPerPage: http.paginationCount, currentPage: p, totalItems: http.CONSpages }<div *ngIf="http.CONSpages > 8">
+                                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                    </div>-->
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                </div> <!-- 2nd card -->
+
+                <div class="tab-pane fade" id="trainer" role="tabpanel" aria-labelledby="trainer-tab">
+                    <div class="tab-container">
+                        <div class="main">
+
+                            
+                            <p *ngIf="usersListVend == ''" class="text-center">No Vendors Available</p>
+                            <div class="card-columns full-width" style="column-count: 1;border-radius: 10px;" >
+                                <div class="gymDsgn">
+                                    <div class="row" *ngIf="(usersListVend | filter:searchText | filter:searchdrop) as usersListVend">
+                                        <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of usersListVend ">
+                                            <div class="dashCard" >
+                                                <!-- <div class="iconTop">
+                                                    <i class="fa fa-pencil-square-o dashIcon" style="margin-right: 0.7em;" aria-hidden="true"
+                                                        data-toggle="modal" data-target="#gymModal" (click)="editGym(item)"></i>
+                                                    <i class="fa fa-trash-o dashIcon" aria-hidden="true" (click)="deleteGym(item.user_id)"></i>
+                                                </div>    
+                                                <br> -->
+                                                <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <mat-menu #menu="matMenu">
+                                                    <button mat-menu-item (click)="editUser(item)" data-toggle="modal" data-target="#userModal">Edit</button>
+                                                    <button mat-menu-item (click)="deleteUser(item)">Delete</button>
+                                                    <!-- <button mat-menu-item data-toggle="modal" (click)="forgotPassword(item)" data-target="#forgotPassModal">Reset Password</button> -->
+                                                  </mat-menu>
+                                                <div class="row" >
+                                                    <div class="col-md-12">
+                                                            <!-- <div class="imgBox"> -->
+                                                    <div class="profileImage">
+                                                        <img class="card-img-top rounded-circle" for="img"  for="img" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)"  src="{{http.imageURL}}{{item.user_img}}"
+                                                            onerror="this.src='assets/image/user.svg'" alt="Profile image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row" (click)="viewUser(item)">
+                                                    <div class="col-md-12">
+                                                        <div class="textDsgn">
+                                                            <span class="semiBold-font">{{ item.name}}</span>
+                                                            <p class="light-font">{{ item.prof }}</p>
+                                                            <p class="light-font">+91 {{item.mobile_no}}</p> 
+                                                        <!-- <p class="text-fnt80">{{item.last_name}}</p>
+                                                        <p class="text-fnt80">{{item.email_id}}</p>
+                                                        <p class="text-fnt80">{{item.contact_no}}</p> -->
+                                                        <!-- <p class="text-fnt80"><i class="fa fa-map-marker"></i>  {{item.address}},{{item.city}},{{item.state}}</p> -->
+                                                        </div>
+                        
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--| paginate: { itemsPerPage: http.paginationCount, currentPage: p , totalItems: http.VENDpages}<div *ngIf="http.VENDpages   > 8">
+                                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="publicuser" role="tabpanel" aria-labelledby="trainer-tab">
+                    <div class="tab-container">
+                        <div class="main">
+
+                            
+                            <p *ngIf="usersListPublicUser == ''" class="text-center">No Vendors Available</p>
+                            <div class="card-columns full-width" style="column-count: 1;border-radius: 10px;" >
+                                <div class="gymDsgn">
+                                    <div class="row" *ngIf="(usersListPublicUser | filter:searchText | filter:searchdrop) as usersListPublicUser">
+                                        <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of usersListPublicUser ">
+                                            <div class="dashCard" >
+                                                <!-- <div class="iconTop">
+                                                    <i class="fa fa-pencil-square-o dashIcon" style="margin-right: 0.7em;" aria-hidden="true"
+                                                        data-toggle="modal" data-target="#gymModal" (click)="editGym(item)"></i>
+                                                    <i class="fa fa-trash-o dashIcon" aria-hidden="true" (click)="deleteGym(item.user_id)"></i>
+                                                </div>    
+                                                <br> -->
+                                                <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <mat-menu #menu="matMenu">
+                                                    <button mat-menu-item (click)="editUser(item)" data-toggle="modal" data-target="#userModal">Edit</button>
+                                                    <button mat-menu-item (click)="deleteUser(item)">Delete</button>
+                                                    <!-- <button mat-menu-item data-toggle="modal" (click)="forgotPassword(item)" data-target="#forgotPassModal">Reset Password</button> -->
+                                                  </mat-menu>
+                                                <div class="row" >
+                                                    <div class="col-md-12">
+                                                            <!-- <div class="imgBox"> -->
+                                                    <div class="profileImage">
+                                                        <img class="card-img-top rounded-circle" for="img"  for="img" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)"  src="{{http.imageURL}}{{item.user_img}}"
+                                                            onerror="this.src='assets/image/user.svg'" alt="Profile image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row" (click)="viewUser(item)">
+                                                    <div class="col-md-12">
+                                                        <div class="textDsgn">
+                                                            <span class="semiBold-font">{{ item.name}}</span>
+                                                            <p class="light-font">{{ item.prof }}</p>
+                                                            <p class="light-font">+91 {{item.mobile_no}}</p> 
+                                                            <p class="light-font">{{item.created_at}} </p>
+                                                        <!-- <p class="text-fnt80">{{item.last_name}}</p>
+                                                        <p class="text-fnt80">{{item.email_id}}</p>
+                                                        <p class="text-fnt80">{{item.contact_no}}</p> -->
+                                                        <!-- <p class="text-fnt80"><i class="fa fa-map-marker"></i>  {{item.address}},{{item.city}},{{item.state}}</p> -->
+                                                        </div>
+                        
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--| paginate: { itemsPerPage: http.paginationCount, currentPage: p , totalItems: http.VENDpages}<div *ngIf="http.VENDpages   > 8">
+                                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"  id="viewPicModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="color: black;">
+                   
+                        <div class="row" style="padding: 5%;">
+                            <div class="col-md-6">
+                                <span class="semiBold-font">{{selectedUser.name}}</span>
+                             </div>
+                            <div class="col-md-6">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                               </div>
+                       </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body" style="margin-left: 5%;">
+                        <!-- <div class="dashCard" > -->
+                                               
+                            <div class="row">
+                                <div class="col-md-12">
+                                        <!-- <div class="imgBox"> -->
+                                <div class="profileimage" style="text-align: center;">
+                                    <img class="feedmodalImg" for="img"  src="{{http.imageURL}}{{selectedUser.user_img}}"
+                                        onerror="this.src='assets/image/bg.jpg'" alt="Profile image">
+                                    </div>
+                                </div>
+                            </div>
+                               
+                                
+                            <!-- </div> -->
+                        
+                      
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" #closeModal id="userModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="color: black;">
+                   
+                        <div class="row" style="padding: 5%;">
+                            <div class="col-md-6">
+                                <span class="semiBold-font">{{addEditlabel}}</span>
+                             </div>
+                            <div class="col-md-6">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                               </div>
+                       </div>
+                    <div class="modal-header r-border" style="padding: 0%;">
+                       
+                    <div class="row full-width">
+                        <div class="col-md-7">
+                            <div class="profileimage">
+                                <input type="file" style="float:right;" id="uploadImage" (change)="fileChangeEvent($event)" />
+                                <img class="rounded-circle" #img style="float:right;" width="80px" height="80px"
+                                onerror="this.src='assets/image/user.svg'"  [src]="images" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="imgCropDisplay">
+                                <image-cropper *ngIf="showImg" [imageChangedEvent]="imageChangedEvent"
+                                    [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png"
+                                    (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                                    (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="cropBtn" *ngIf="showImg">
+                                <button class="btn-primary btn-secon-bg br-2 text-fnt80 app-color" (click)="saveImage()">Crop</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body" style="margin-left: 5%;">
+                        <form [formGroup]="addUserForm">
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span class="full-width f-small">User Name</span>
+                                    <input type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="userData.userName" formControlName="userName">
+
+                                    <div *ngIf="frm.userName.hasError('required') && frm.userName.touched" class="font-italic error-box">
+                                        <small>Please enter the user name</small>
+                                    </div>
+                            </div>
+                               
+                                <div class="col-lg-6">
+                                    
+                                            <span class=" full-width f-small">Email id</span>
+                                       
+                                        <input type="email" class="form-control f-small br-2 wth-80" [(ngModel)]="userData.email" formControlName="email">
+                                    
+                                    <div *ngIf="(frm.email.hasError('required') || frm.email.hasError('pattern')) && frm.email.touched"
+                                        class="font-italic error-box">
+                                        <small>Please enter the valid email id</small>
+                                    </div>
+                            
+                            </div>
+                            </div>
+                                
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <span class="full-width f-small">User Type</span>
+                                        <select class="form-control f-small br-2 wth-80" [(ngModel)]="userData.userType" formControlName="userType" (change)="getProf(userData.userType)">
+                                            <option selected disabled [value]="null"></option>
+                                            <option *ngFor="let roles of userRolesList" [ngValue]="roles.role_id">{{ roles.role
+                                                }}</option>
+                                        </select>
+                                    <div *ngIf="frm.userType.hasError('required') && frm.userType.touched" class="font-italic error-box">
+                                        <small>Please select the User Type</small>
+                                    </div>
+                                </div>
+
+
+                                <!-- <div class="col-lg-6">
+                                    <span class="full-width f-small">Proffession</span>
+                                    <select class="form-control f-small br-2 wth-80" [(ngModel)]="userData.prof" formControlName="prof" (change)="getProf(userData.prof)">
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let roles of prof_staff" [ngValue]="roles.category_name">{{ roles.category_name
+                                            }}</option>
+                                    </select>
+                                <div *ngIf="frm.prof.hasError('required') && frm.prof.touched" class="font-italic error-box">
+                                    <small>Please select the User Type</small>
+                                </div>
+                            </div> -->
+
+
+                                <div class="col-lg-6">
+                                    <span class=" full-width f-small">Profession</span>
+                                    <select *ngIf="profession == 2" class="form-control f-small br-2 wth-80" formControlName="prof" [(ngModel)]="userData.prof" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of prof_staff" [ngValue]="city.category_id">{{city.category_name}}</option>
+                                    </select>
+                                    
+                                    <select *ngIf="profession == 3" class="form-control f-small br-2 wth-80" formControlName="prof" [(ngModel)]="userData.prof" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of prof_vendors" [ngValue]="city.category_id">{{city.category_name}}</option>
+                                    </select>
+        
+                                    <select *ngIf="profession == 4" class="form-control f-small br-2 wth-80" formControlName="prof" [(ngModel)]="userData.prof" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of prof_consultants" [ngValue]="city.category_id">{{city.category_name}}</option>
+                                    </select>
+        
+                                    <select *ngIf="profession == 5" class="form-control f-small br-2 wth-80" formControlName="prof" [(ngModel)]="userData.prof" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of prof_contractors" [ngValue]="city.category_id">{{city.category_name}}</option>
+                                    </select>
+
+                                    <!-- <select *ngIf="profession == 6" class="form-control f-small br-2 wth-80" formControlName="prof" [(ngModel)]="userData.prof" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of prof_clients" [ngValue]="city.category_id">{{city.category_name}}</option>
+                                    </select> -->
+                                </div>
+        
+        
+        
+                               </div>
+                               
+                               <div class="row" *ngIf="!addUser">
+                                <div class="col-lg-6">
+                                    
+                                    <span class=" full-width f-small">State</span>
+                               
+                            <select class="form-control f-small br-2 wth-80" formControlName="state" [(ngModel)]="userData.state" (change)="getCities($event)">
+                                <option selected disabled [value]="null"></option>
+                                <option *ngFor="let state of stateList" [value]="state.code">{{state.name}}</option>
+                            </select>
+                            <div *ngIf="frm.state.hasError('required') && frm.state.touched"
+                                class="font-italic error-box">
+                                <small>Please enter the State name</small>
+                            </div>
+                        </div>
+                             
+                                <div class="col-lg-6"  >
+                                    <span class=" full-width f-small">City</span>
+                                
+                                    <select class="form-control f-small br-2 wth-80" formControlName="city" [(ngModel)]="userData.city" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of cityList" [value]="city.name">{{city.name}}</option>
+                                    </select>
+                                <div *ngIf="frm.city.hasError('required') && frm.city.touched" class="font-italic error-box">
+                                    <small>Please enter the City name</small>
+                                </div>
+                                   </div>
+                                </div>
+                            
+
+                            
+                            <div class="row" *ngIf="addUser">
+                                <div class="col-lg-6">
+                                    
+                                    <span class=" full-width f-small">State</span>
+                               
+                            <select class="form-control f-small br-2 wth-80" formControlName="state" [(ngModel)]="userData.state" (change)="getCities($event)">
+                                <option selected disabled [value]="null"></option>
+                                <option *ngFor="let state of stateList" [value]="state.code">{{state.name}}</option>
+                            </select>
+                            <div *ngIf="frm.state.hasError('required') && frm.state.touched"
+                                class="font-italic error-box">
+                                <small>Please enter the State name</small>
+                            </div>
+                        </div>
+                             
+                                <div class="col-lg-6"  >
+                                    <span class="full-width f-small ">New Password</span>
+                                       
+                                        <input type="password"  class="form-control f-small br-2 wth-80" [(ngModel)]="userData.pass" formControlName="pass">
+                                   
+                                    <div *ngIf="frm.pass.hasError('required') && frm.pass.touched" class="font-italic error-box"
+                                        style="margin-left: 1em;">
+                                        <small>Please enter the New password</small>
+                                    </div>
+                                   </div>
+                                </div>
+                                
+                          
+                            <div class="row" *ngIf="addUser">
+                                <div class="col-lg-6">
+                                   
+                                    <span class=" full-width f-small">City</span>
+                                
+                                <select class="form-control f-small br-2 wth-80" formControlName="city" [(ngModel)]="userData.city" >
+                                    <option selected disabled [value]="null"></option>
+                                    <option *ngFor="let city of cityList" [value]="city.name">{{city.name}}</option>
+                                </select>
+                            <div *ngIf="frm.city.hasError('required') && frm.city.touched" class="font-italic error-box">
+                                <small>Please enter the City name</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-6" >
+                            <span class=" full-width f-small">Confirm New Password</span>
+                                
+                                <input type="password"  class="form-control f-small br-2  wth-80" [(ngModel)]="userData.cpass" formControlName="cpass">
+                            
+                            <div *ngIf="frm.cpass.hasError('required') && frm.cpass.touched" class="font-italic error-box"
+                                style="margin-left: 1em;">
+                                <small>Please enter the Confirm New Password</small>
+                            </div>
+                            <div *ngIf="userData.pass && (userData.cpass != userData.pass)" class="font-italic error-box" style="margin-left: 1em;">
+                                <small>New Password and Confirm New Passwords must be same.</small>
+                            </div>
+                        </div>
+                    </div>
+                                
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span class="full-width f-small">Area</span>
+                                          
+                                           <input type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="userData.area" formControlName="area">
+                                      
+                                       <!--<div *ngIf="frm.area.hasError('required') && frm.area.touched" class="font-italic error-box">
+                                           <small>Please enter the Area name</small>
+                                       </div>-->
+                                   </div>
+
+                                <div class="col-lg-6">
+                                    <span class="full-width f-small">Mobile number</span>
+                                
+                                <input type="tel" class="form-control f-small br-2 wth-80" [(ngModel)]="userData.phoneno" maxlength="10"
+                                    formControlName="phoneno">
+
+                                <div *ngIf="frm.phoneno.hasError('required') && frm.phoneno.touched" class="font-italic error-box">
+                                <small>Please enter the valid mobile number</small>
+                                </div>
+                                <div *ngIf="frm.phoneno.hasError('pattern')" class="font-italic error-box">
+                                <small>Mobile Number must contain numbers only</small>
+                                </div>
+                                <div *ngIf="frm.phoneno.hasError('minlength')" class="font-italic error-box">
+                                <small>Mobile number should be min 10</small>
+                                </div>
+
+                                </div>
+
+
+
+
+
+
+                                    
+                        
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <span class=" full-width f-small">Date of Birth</span>
+                                    
+                                      <input type="date" class="form-control f-small  br-2  wth-80" [(ngModel)]="userData.dob" placeholder="Select DOB" formControlName="dob"/>
+                                 
+                                  <!--<div *ngIf="(frm.dob.hasError('required') || frm.dob.hasError('pattern')) && frm.dob.touched"
+                                      class="font-italic error-box">
+                                      <small>Please enter the DOB</small>
+                                  </div>-->
+                          
+                          </div>
+                          <div class="col-lg-6">
+                            <span class=" full-width f-small">Date of Anniversary</span>
+                          
+                               <input type="date" class="form-control f-small br-2  wth-80" [(ngModel)]="userData.annDate" placeholder="Select Date" formControlName="annDate"/>
+                               </div>
+                     
+                        </div>
+                            
+                                
+                                
+
+                        </form>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-bg mt-3 br-2 mr-5 width-45 semiBold-font app-color"
+                                (click)="adduserSubmit()">{{addEditBtn}}</button>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="forgotPassModal" *ngIf="showOTP">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>Change Password</h6>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="OTPscreen" >
+                    <form #f ="ngForm" name = "form" (submit) = "onSubmit(f)"  autocomplete="off">
+                    <input type="type" name="Password" [(ngModel)]="password" class="form-control emailInput addGym br-2 full-width" placeholder="Enter the New Password">
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-bg mt-3 br-2 mr-5 width-45 text-fnt80 app-color"
+                            >Send</button>
+                        
+                        <button type="submit" data-dismiss="modal" #closeModal class="btn btn-primary btn-secon-bg mt-3 br-2 width-45 text-fnt80 app-color">Cancel</button>
+                    </div>
+                </form>
+                </div>
+
+               
+
+               
+            </div>
+        </div>
+    </div>
+</div>

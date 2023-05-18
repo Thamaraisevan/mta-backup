@@ -1,0 +1,356 @@
+<div class="container">
+
+    <div class="main">
+        
+           
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fa fa-search searchIcon" aria-hidden="true"></i>
+                    <input type="text" [(ngModel)]="searchText" style="background: white !important;" class="form-control br-2 semiBold-font searchBox"  (keypress)="omit_special_char($event)" (change)="checkFilter(searchText)" (ngModelChange)="chngFun($event)"  placeholder="Search" aria-label="Search">
+                </div>
+                <div class="col-md-4">
+                   
+                    <select class="form-control br-2 semiBold-font searchBox" [(ngModel)]="searchdrop" (change)="checkFilter()" placeholder="Search" aria-label="Search" >
+                        <option selected value="">All</option>
+                        <option value="Active">Active</option>
+                        <option  value="Hold">Hold</option>
+                        <option  value="Cancelled">Cancelled</option>
+                        <option  value="Completed">Completed</option>
+                        <option  value="Proposed">Proposed</option>
+                    </select> </div>
+                <div class="col-md-2">
+                    <button (click)="addProject();" class="btn btn-secon-bg btn-primary semiBold-font app-bg add-project" data-toggle="modal" data-target="#gymModal"
+                    (click)="addModal()">ADD PROJECT</button><br>                
+                </div>
+                <div class="col-md-2">
+                    <button (click)="addcategory();" class="btn btn-secon-bg btn-primary semiBold-font app-bg add-cate" data-toggle="modal" data-target="#catModal"
+                    >ADD CATEGORIES</button><br>                
+                </div>
+            </div>
+
+     
+        <div class="gymDsgn">
+            <div class="row" *ngIf="(projectList) as filterResults">
+                <!-- | filter:searchText | filter:searchdrop -->
+               <div  class="text-center" style="width:100%;">
+                <!-- <p *ngIf="">No Projects Available</p> -->
+                <p *ngIf="filterResults.length == 0 || projectList == ''">No Projects Available</p>
+            </div>
+                <div class="col-md-3" style="margin-top: 2em;" *ngFor="let item of filterResults ">
+                    <div class="dashCard">
+                        
+                        <i class="fa fa-ellipsis-h " mat-button [matMenuTriggerFor]="menu" style="float: right;font-size: 1em;" aria-hidden="true"></i>
+                                                <!-- <button >Menu</button> -->
+                                                <!-- <mat-menu #menu="matMenu">
+                                                  <button mat-menu-item (click)="editProject(item,'Active')">Active</button>
+                                                  <button mat-menu-item (click)="editProject(item,'Hold')">Hold</button>
+                                                  <button mat-menu-item (click)="editProject(item,'Cancelled')">Cancelled</button>
+                                                  <button mat-menu-item (click)="editProject(item,'Completed')">Completed</button>
+                                                </mat-menu> -->
+                                                <mat-menu #menu="matMenu">
+                                                    <button mat-menu-item (click)="editProject(item)" data-toggle="modal" data-target="#gymModal">Edit</button>
+                                                    <button mat-menu-item (click)="deleteProject(item)">Delete</button>
+                                                  </mat-menu>
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!-- <div class="imgBox"> -->
+                            <div >
+                                <img class="rounded-circle" data-toggle="modal" data-target="#viewPicModal"  (click)="viewpic(item)" for="img" style="height: 60px;width: 60px;" src="{{http.imageURL}}{{item.project_img}}"
+                                    onerror="this.src='assets/image/project.jpg'" alt="Profile image">
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-4" style="text-align: left;display: flex;padding-top: 15%;"  (click)="viewProjects(item)">
+                                <i class="fa fa-dot-circle-o {{item.status}}" style="font-size: 1em;"  aria-hidden="true"></i><span class="light-font" style="padding-left: 10%;">{{ item.status }}</span>
+                            </div>
+                        </div>
+                            <div class="row"  (click)="viewProjects(item)">
+                            <div class="col-md-12" style="padding-right:0px;">
+                                <div class="textDsgn">
+                                <span class="semiBold-font">{{ item.project_name }}</span>      
+                                <!-- <p class="text-fnt80">{{item.last_name}}</p>
+                                <p class="text-fnt80">{{item.email_id}}</p>
+                                <p class="text-fnt80">{{item.contact_no}}</p> -->
+                                <p class="light-font"><i class="fa fa-map-marker secondry-color"></i><span class="address">{{item.address}},{{item.city}},{{item.state}}</span></p>
+                                
+                            </div>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="modal fade" #closeModal id="gymModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="color: black;">
+                    
+                        <div class="row" style="padding: 5%;">
+                            <div class="col-md-6">
+                            <span class="semiBold-font">{{projectAction}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                               </div>
+                       </div>
+                            
+                        <div class="modal-header r-border" style="padding: 0 !important;">
+                           
+                        <div class="row full-width">
+                            <div class="col-md-7">
+                                <div class="profileimage">
+                                    <input type="file" style="float:right;" id="uploadImage" (change)="fileChangeEvent($event)" />
+                                    <img class="rounded-circle" #img style="float:right;" width="80px" height="80px"
+                                        [src]="images"  onerror="this.src='assets/image/pro-default.png'"/>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="imgCropDisplay">
+                                    <image-cropper *ngIf="showImg" [imageChangedEvent]="imageChangedEvent"
+                                        [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png"
+                                        (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                                        (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="cropBtn" *ngIf="showImg">
+                                    <button class="btn-primary btn-secon-bg br-2 text-fnt80 app-color" (click)="saveImage()">Crop</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form [formGroup]="addProjectForm">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                   
+                                        <span class="full-width f-small">Project Name</span>
+                                       <input type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="selectededitProject.project_name" formControlName="projectname" >
+
+                                        <div *ngIf="frm.projectname.hasError('required') && frm.projectname.touched" class="font-italic error-box">
+                                            <small>Please enter the Project name</small>
+                                        </div>
+                                        <div *ngIf="frm.projectname.hasError('pattern')" class="font-italic error-box">
+                                            <small>Numbers & Special characters not allowed!</small>
+                                        </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                                <span class="full-width f-small">Area</span>
+                                           
+                                            <input type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="selectededitProject.address" formControlName="area">
+                                        
+                                        <div *ngIf="frm.area.hasError('required') && frm.area.touched" class="font-italic error-box">
+                                            <small>Please enter the Area name</small>
+                                        </div>
+                                    </div>
+                            
+                               
+
+                               
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    
+                                    <span class=" full-width f-small">State</span>
+                              
+                            <select class="form-control f-small br-2 wth-80" formControlName="state" [(ngModel)]="selectededitProject.state" (change)="getCities($event)">
+                                <option selected disabled [value]="null"></option>
+                                <option *ngFor="let state of stateList" [value]="state.code">{{state.name}}</option>
+                            </select>
+                            <div *ngIf="frm.state.hasError('required') && frm.state.touched"
+                                class="font-italic error-box">
+                                <small>Please enter the State name</small>
+                            </div>
+                        </div>
+                              
+                               
+                            
+                            <div class="col-lg-6">
+                               
+                                        <span class="full-width f-small">Description</span>
+                                    
+                                    <textarea type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="selectededitProject.description" formControlName="description"></textarea>
+                                
+                                <div *ngIf="frm.description.hasError('required') && frm.description.touched"
+                                    class="font-italic error-box">
+                                    <small>Please enter the Description</small>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                            <div class="row" style="margin-top: -3%;">
+                                <div class="col-lg-6">
+                                    
+                                            <span class="full-width f-small ">City</span>
+                                           
+                                    <select class="form-control f-small br-2 wth-80" [(ngModel)]="selectededitProject.city" formControlName="city" >
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let city of cityList" [value]="city.name">{{city.name}}</option>
+                                    </select>
+                                    <div *ngIf="frm.city.hasError('required') && frm.city.touched" class="font-italic error-box">
+                                        <small>Please enter the City name</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6" *ngIf="!showAdd">
+                                    
+                                    <span class="full-width f-small ">Status</span>
+                                
+                                    <select class="form-control br-2  wth-80" [(ngModel)]="selectededitProject.status" formControlName="status" placeholder="Status">
+                                        <option *ngFor="let item of statusList" [value]="item.name">{{item.name}}</option>
+                                    </select>
+                            
+                        </div>
+                            </div>
+                               
+
+
+                        </form>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-bg mt-3 br-2 mr-5 width-45 text-fnt80 semiBold-font app-color"
+                                (click)="addprojectSubmit(selectededitProject)">{{projectActionBtn}} PROJECT</button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD CATEGORY -->
+        <div class="modal fade"   #closeCatModal   id="catModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="color: black;">
+                    <div class="row" style="text-align: right;">
+                        <div class="col-md-12">
+                    <button *ngIf="!catList" (click)="categoryList();" style="opacity: 0.6;width: auto;" class="btn btn-bg btn-primary semiBold-font app-bg add-cate">AVAILABLE CATEGORIES  <i class="fa fa-arrow-right"></i></button><br>          
+                </div>
+            </div>
+                    <div class="row" style="padding: 5%;">
+                        <div class="col-md-6">
+                            <div class="row full-width" *ngIf="catList" style="padding-left:2%;font-size: 16px;" >
+                                <p (click)="backBtn()"><i class="fa fa-long-arrow-left "  aria-hidden="true"></i> BACK</p>
+                            </div>
+                        <span class="semiBold-font">{{categoryAction}}</span>
+                       
+                        </div>
+                       
+                        <div class="col-md-6">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                           </div>
+                   </div>
+                        
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form [formGroup]="addCategoryForm" *ngIf="!catList" style="padding: 0% 10% 1% 10%;">
+                                
+                            <div class="row padrightleft">
+                                
+                                            <span class=" full-width f-small required-field">Category Name</span>
+                                     
+                                        <input type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="catData.category_name" formControlName="categoryname">
+                                    
+                                    <div *ngIf="frmCat.categoryname.hasError('required') && frmCat.categoryname.touched" class="font-italic error-box">
+                                        <small>Please enter the Category name</small>
+                                    </div>
+                                </div>
+                                <div class="row padrightleft">
+                                  
+                                            <span class=" full-width f-small required-field">Description</span>
+                                        
+                                        <textarea type="text" class="form-control f-small br-2 wth-80" [(ngModel)]="catData.description" formControlName="description"></textarea>
+                                  
+                                    <div *ngIf="frmCat.description.hasError('required') && frmCat.description.touched"
+                                        class="font-italic error-box">
+                                        <small>Please enter the Description</small>
+                                    </div>
+                                </div>
+
+                                <div class="row padrightleft">
+                                    <span class="full-width f-small required-field">User Type</span>
+                                    <select class="form-control f-small br-2 wth-80" formControlName="userType" [(ngModel)]="catData.role_id">
+                                        <option selected disabled [value]="null"></option>
+                                        <option *ngFor="let roles of userRolesList" [ngValue]="roles.role_id">{{ roles.role
+                                            }}</option>
+                                    </select>
+                                <!-- <div *ngIf="frmcat.userType.hasError('required') && frmcat.userType.touched" class="font-italic error-box">
+                                    <small>Please select the User Type</small>
+                                </div> -->
+                            </div>
+                            
+
+                             
+                        </form>
+                        <div  *ngIf="catList">
+                        
+                            <div class="row full-width"  *ngFor="let cat of categoriesList">
+                        <div style="padding-left:4em" class="col-sm-10">
+                            <div  class="semiBold-font">{{cat.category_name}}</div>
+                            <p class="light-font">{{cat.description}}</p>
+                            
+                        </div>
+                        <div class="col-sm-2">
+                        <i class="fa fa-edit" data-toggle="modal" (click)="addcategory(cat)"></i>
+                        <i class="fa fa-trash" style="padding-left: 25px;" (click)="deleteCat(cat)"></i>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="text-center" *ngIf="!catList && formHandle">
+                            <button type="submit" class="btn btn-primary btn-bg mt-3 br-2 mr-5 width-45 text-fnt80 app-color"
+                                (click)="addCategorySubmit()">Add Category</button>
+                           
+                        </div>
+                        <div class="text-center" *ngIf="!catList && !formHandle">
+                            <button type="submit" class="btn btn-primary btn-bg mt-3 br-2 mr-5 width-45 text-fnt80 app-color"
+                                (click)="editCategorySubmit(catData.category_id)">Edit Category</button>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade"  id="viewPicModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="color: black;">
+                   
+                        <div class="row" style="padding: 5%;">
+                            <div class="col-md-6">
+                                <span class="semiBold-font">{{selectedProject.project_name}}</span>
+                             </div>
+                            <div class="col-md-6">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                               </div>
+                       </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body" style="margin-left: 5%;">
+                      
+                                               
+                            <div class="row">
+                                <div class="col-md-12">
+                                <div class="profileimage" style="text-align: center;">
+                                    <img class="feedmodalImg" for="img"  src="{{http.imageURL}}{{selectedProject.project_img}}"
+                                        onerror="this.src='assets/image/bg.jpg'" alt="Profile image" width="100%">
+                                    </div>
+                                </div>
+                            </div>
+                               
+                                
+                        
+                      
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

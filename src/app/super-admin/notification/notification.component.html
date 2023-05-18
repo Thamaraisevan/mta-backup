@@ -1,0 +1,153 @@
+<div class="container">
+
+  <div class="main">
+
+
+    <div class="dashCard light-font">
+      <div class="semiBold-font">Send Notification</div>
+      <form [formGroup]="notiForm">
+
+        <div class="row">
+          <div class="col-lg-6">
+            <!-- <div class="col-lg-6"> -->
+
+            <!-- <div class="input-group-prepend wth-50"> -->
+            <span class="full-width f-small">Upload File</span>
+            <!-- </div> -->
+            <!-- <input type="text" class="form-control addGym br-2 wth-80" formControlName="userType"> -->
+            <input type="file" class="form-control  br-2 wth-80 uploaddocs" id="uploaddocs" formControlName="filename"
+              (change)="fileChangeEvent($event)" />
+            <div *ngIf="frm.filename.hasError('required') && frm.filename.touched" class="font-italic error-box">
+              <small>Please select a File</small>
+            </div>
+          </div>
+
+
+          <div class="col-lg-6">
+
+            <!-- <div class="input-group-prepend wth-50"> -->
+            <span class="full-width  required-field">Title</span>
+            <!-- </div> -->
+            <!-- <input type="text" class="form-control addGym br-2 wth-80" formControlName="userType"> -->
+
+            <input type="text" class="form-control f-small br-2 wth-80" formControlName="title">
+
+            <div *ngIf="frm.title.hasError('required') && frm.title.touched" class="font-italic error-box">
+              <small>Please enter title</small>
+            </div>
+
+
+          </div>
+          <!-- <div class="row "> -->
+
+          <div class="col-lg-6">
+            <span class="full-width f-small">User Type</span>
+            <select class="form-control br-2 wth-80" [(ngModel)]="role_id" placeholder="Select User"
+              (change)="getUsers(role_id)" formControlName="userType">
+              <option selected [ngValue]=0>All</option>
+              <option *ngFor="let roles of userRolesList" [ngValue]="roles.role_id">{{ roles.role
+                    }}</option>
+            </select>
+            <!-- <div *ngIf="frm.userType.hasError('required') && frm.userType.touched" class="font-italic error-box">
+            <small>Please select the User Type</small>
+        </div> -->
+          </div>
+
+          <!--<div class="col-lg-6" style="display: flex; width: 100%;">
+    
+          <h3 >  <input type="checkbox" style="display: flex; flex-direction: column;"  *ngFor="let user of userList" formControlName="user_id" value="{{user_id}" [(ngModel)]="user.checked" ></h3>
+
+        <h3 style="display: flex; flex-direction: column;"> <span *ngFor="let user of userList"  [ngValue]="user.user_id">{{ user.name }}</span></h3>-->
+
+          <!-- <div *ngIf="frm.userType.hasError('required') && frm.userType.touched" class="font-italic error-box">
+        <small>Please select the User Type</small>
+    </div>
+</div>-->
+
+
+          <!--<div class="col-md-6" style="display: flex; width: 100%;">
+    
+          <p>  <input type="checkbox" style="display: flex; margin-bottom: 8px; float: left" *ngFor="let user of userList" class="full-width f-small br-2 wth-50" formControlName="user_id" value="{{user_id}" [(ngModel)]="user.checked" ></p>
+
+        <p class="full-width f-small br-2 wth-50" style="display: flex; float: right;" *ngFor="let user of userList"  [ngValue]="user.user_id">{{ user.name }}</p>
+    
+    <!-- <div *ngIf="frm.userType.hasError('required') && frm.userType.touched" class="font-italic error-box">
+        <small>Please select the User Type</small>
+    </div> 
+</div>-->
+
+
+          <!-- <div class="col-lg-6" style="display: flex;">
+        
+        <div class="col-md-6" style="display: flex; flex-direction: column;">
+        <label *ngFor="let user of userList"  [ngValue]="user.user_id">{{ user.name }}
+            <input type="checkbox" formControlName="user_id" value="{{user_id}" [(ngModel)]="user.checked" (change)="getUserNoti(user.user_id,user.checked)"> 
+        </label>
+        </div>
+
+</div> -->
+
+
+          <div class="table table-responsive" class="col-lg-6" style="display: flex;" *ngIf="userList != '' ">
+            <table class="table" class="col-md-6" style="display: flex; flex-direction: column;">
+              <thead>
+              </thead>
+
+              <tbody>
+                <tr style="cursor: pointer;" *ngFor="let user of userList" [ngValue]="user.user_id">
+                  <td class="col-md-4">{{ user.name  }}</td>
+                  <td class="col-md-1">
+                    <input type="checkbox" formControlName="user_id" value="{{user_id}}" [(ngModel)]="user.checked"
+                      (change)="getUserNoti(user.user_id,user.checked)">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+            <!-- <div class="col-lg-6">
+<div style="display: flex;">
+    <div class="col-md-6" style="display: flex; flex-direction: column;">
+    <input type="checkbox" style="display: flex; margin-bottom: 22px; flex-direction: column;" *ngFor="let user of userList"  formControlName="user_id" value="{{user_id}" [(ngModel)]="user.checked" (change)="getUserNoti(user.user_id,user.checked)">
+    </div>
+    <div class="col-md-6" style="display: flex; flex-direction: column;">
+    <P  *ngFor="let user of userList"  [ngValue]="user.user_id">{{ user.name }}</P>
+    </div>
+</div>
+</div> -->
+
+            <div class=" col-lg-6">
+
+              <!-- <div class="input-group-prepend wth-50"> -->
+              <span class="full-width f-small required-field">Description</span>
+              <!-- </div> -->
+              <!-- <input type="text" class="form-control addGym br-2 wth-80" formControlName="userType"> -->
+              <!-- <select class="form-control  br-2 wth-80" formControlName="username">
+                    <option selected disabled [value]="null"></option>
+                    <option *ngFor="let user of userList" [ngValue]="user.user_id">{{ user.name
+                        }}</option>
+                </select> -->
+              <textarea type="text" class="form-control  wth-80 br-2" formControlName="description"></textarea>
+
+              <div *ngIf="frm.description.hasError('required') && frm.description.touched"
+                class="font-italic error-box">
+                <small>Please enter description</small>
+              </div>
+            </div>
+
+          </div>
+
+
+
+      </form>
+      <div class="text-center">
+        <button type="submit" [disabled]="disableSend"
+          class="btn btn-primary btn-bg mt-3 br-2  width-45 semiBold-font app-color" (click)="sendNotification()">Send
+          Notification</button>
+        <button type="submit" class="btn btn-primary btn-bg mt-3 br-2  width-45 semiBold-font app-color"
+          (click)="clearNotification()">Clear</button>
+
+      </div>
+    </div>
+  </div>
+</div>
